@@ -563,7 +563,11 @@ cmp.setup {
 -- vim: ts=2 sts=2 sw=2 et
 
 -- Custom stuff here
-vim.keymap.set('n', '<Leader>t', '<cmd>Neotree<cr>')
+-- First custom keymappings
+vim.keymap.set('n', '<leader>t', '<cmd>Neotree<cr>', { desc = "Neo[t]ree" })
+-- Custom jump
+vim.keymap.set('n', '<A-l>', '<C-i>')
+vim.keymap.set('n', '<A-h>', '<C-o>')
 
 -- Line numbering options
 vim.opt.nu = true
