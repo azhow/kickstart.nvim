@@ -9,6 +9,15 @@ vim.g.maplocalleader = ' '
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'config' .. '/plugins/lazy/lazy.nvim'
 local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'
+
+if not vim.loop.fs_stat(pluginspath) then
+  local envextract = os.execute('sh ' .. vim.fn.stdpath 'config' .. '/install_env.sh')
+  if not envextract == 0 then
+    print("Failed to extract environment.  Aborting init.")
+    return 1
+  end
+end
+
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure plugins ]]
