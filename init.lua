@@ -11,7 +11,7 @@ local lazypath = vim.fn.stdpath 'config' .. '/plugins/lazy/lazy.nvim'
 local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'
 
 if not vim.loop.fs_stat(pluginspath) then
-  local envextract = os.execute('sh ' .. vim.fn.stdpath 'config' .. '/install_env.sh')
+  local envextract = os.execute(vim.fn.stdpath 'config' .. '/install_env.sh')
   if not envextract == 0 then
     print("Failed to extract environment.  Aborting init.")
     return 1
