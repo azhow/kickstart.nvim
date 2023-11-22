@@ -1,0 +1,5 @@
+#!/bin/bash
+set $PLUGINS_DEST_DIR=~/.config/nvim/
+cp -r ./* $PLUGINS_DEST_DIR
+cd $PLUGINS_DEST_DIR
+tar -xf ./plugins.tar.gz
