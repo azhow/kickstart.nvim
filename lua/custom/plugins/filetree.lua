@@ -2,13 +2,13 @@
 vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
 return {
-  "nvim-neo-tree/neo-tree.nvim",
+  dir = "~/.config/nvim/plugins/lazy/neo-tree.nvim",
   branch = "v3.x",
   dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-    "MunifTanjim/nui.nvim",
-    "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    { dir = "~/.config/nvim/plugins/lazy/plenary.nvim" },
+    { dir = "~/.config/nvim/plugins/lazy/nvim-web-devicons" },
+    { dir = "~/.config/nvim/plugins/lazy/nui.nvim" },
+    { dir = "~/.config/nvim/plugins/lazy/image.nvim" },
   },
   config = function ()
     require('neo-tree').setup {}

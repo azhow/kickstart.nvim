@@ -1,3 +1,3 @@
 return {
-  'christoomey/vim-tmux-navigator'
+  dir = '~/.config/nvim/plugins/lazy/vim-tmux-navigator'
 }
