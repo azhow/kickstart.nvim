@@ -1,5 +1,3 @@
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 etc
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -473,7 +471,7 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
+  clangd = { },
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
@@ -565,11 +563,12 @@ cmp.setup {
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 etc
+-- vim: ts=2 sts=2 sw=2 et
 
 -- Custom stuff here
 -- First custom keymappings
-vim.keymap.set('n', '<leader>t', '<cmd>Neotree<cr>', { desc = "Neo[t]ree" })
+vim.keymap.set('n', '<leader>nt', '<cmd>Neotree<cr>', { desc = "[n]eo[t]ree" })
+vim.keymap.set('n', '<leader>tl', '<cmd>Telescope<cr>', { desc = "[t]e[l]escope" })
 -- Custom jump
 vim.keymap.set('n', '<A-l>', '<C-i>')
 vim.keymap.set('n', '<A-h>', '<C-o>')
@@ -577,3 +576,10 @@ vim.keymap.set('n', '<A-h>', '<C-o>')
 -- Line numbering options
 vim.opt.nu = true
 vim.opt.rnu = true
+
+vim.opt.expandtab = true
+vim.opt.colorcolumn = { 120 }
+
+-- Display tab differently and also trailing spaces
+vim.opt.listchars:append{tab = "!·", trail = "·"}
+vim.opt.list = true
