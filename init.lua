@@ -474,7 +474,7 @@ local servers = {
   clangd = { },
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
@@ -583,3 +583,9 @@ vim.opt.colorcolumn = { 120 }
 -- Display tab differently and also trailing spaces
 vim.opt.listchars:append{tab = "!·", trail = "·"}
 vim.opt.list = true
+
+-- Remove trailing spaces
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*" },
+  command = [[%s/\s\+$//e]],
+})
