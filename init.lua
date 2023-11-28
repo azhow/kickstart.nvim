@@ -569,6 +569,7 @@ cmp.setup {
 -- First custom keymappings
 vim.keymap.set('n', '<leader>nt', '<cmd>Neotree<cr>', { desc = "[n]eo[t]ree" })
 vim.keymap.set('n', '<leader>tl', '<cmd>Telescope<cr>', { desc = "[t]e[l]escope" })
+vim.keymap.set('n', '<leader>gs', '<cmd>G<cr>', { desc = "[G]it [s]tatus" })
 -- Custom jump
 vim.keymap.set('n', '<A-l>', '<C-i>')
 vim.keymap.set('n', '<A-h>', '<C-o>')
