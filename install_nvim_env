@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo "Installing NVIM configuration"
+
+NVIM_DIR=~/.config/nvim
+
+if [ ! -d "$NVIM_DIR" ]
+then
+        mkdir -p "$NVIM_DIR"
+else
+        mv $NVIM_DIR ~/.config/nvim_oldfiles
+fi
+
+ln -s "$(pwd)/init.lua" $NVIM_DIR/init.lua
+
+ln -s "$(pwd)/lua" $NVIM_DIR
+
+PLUGINS_TAR=./plugins.tar.gz
+if [ -f $PLUGINS_TAR ]
+then
+        echo "Extracting plugins"
+        tar -xf $PLUGINS_TAR
+        ln -s "$(pwd)/plugins" "$NVIM_DIR"
+fi
+
+echo "Done!"
