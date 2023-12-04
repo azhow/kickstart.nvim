@@ -1,5 +1,7 @@
+local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'
+
 return {
-  'windwp/nvim-autopairs',
+  dir = pluginspath .. 'nvim-autopairs',
   event = "InsertEnter",
   opts = {} -- this is equalent to setup({}) function
 }

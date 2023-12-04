@@ -1,3 +1,5 @@
+local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'
+
 return {
-  'christoomey/vim-tmux-navigator'
+  dir = pluginspath .. 'vim-tmux-navigator'
 }

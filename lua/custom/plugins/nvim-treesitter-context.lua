@@ -1,3 +1,5 @@
+local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'
+
 return {
-  'nvim-treesitter/nvim-treesitter-context'
+  dir = pluginspath .. 'nvim-treesitter-context',
 }
