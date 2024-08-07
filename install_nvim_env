@@ -11,16 +11,29 @@ else
         mv $NVIM_DIR ~/.config/nvim_oldfiles
 fi
 
-ln -s "$(pwd)/init.lua" $NVIM_DIR/init.lua
-
-ln -s "$(pwd)/lua" $NVIM_DIR
-
-PLUGINS_TAR=./plugins.tar.gz
-if [ -f $PLUGINS_TAR ]
+# If offline installation option set
+if [ $1 = "-o" ]
 then
-        echo "Extracting plugins"
-        tar -xf $PLUGINS_TAR
-        ln -s "$(pwd)/plugins" "$NVIM_DIR"
+        PLUGINS_DATA_TAR=./plugins_data.tar.gz
+        if [ -f $PLUGINS_DATA_TAR ]
+        then
+                echo "Extracting plugins data"
+                tar -xf $PLUGINS_DATA_TAR
+                ln -s "$(pwd)/plugins" "$NVIM_DIR"
+        fi
+
+        PLUGINS_TAR=./custom_plugins.tar.gz
+        if [ -f $PLUGINS_TAR ]
+        then
+                echo "Extracting custom plugins"
+                tar -xf $PLUGINS_TAR
+                ln -s "$(pwd)/lua/custom/plugins_off" $NVIM_DIR/lua/custom/plugins
+        fi
+
+        ln -s "$(pwd)/init_off.lua" $NVIM_DIR/init.lua
+else
+        ln -s "$(pwd)/lua" $NVIM_DIR
+        ln -s "$(pwd)/init.lua" $NVIM_DIR/init.lua
 fi
 
-echo "Done!"
+echo "All done!"
