@@ -72,7 +72,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -298,14 +298,32 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
+local lga_actions = require("telescope-live-grep-args.actions")
+
 require('telescope').setup {
   defaults = {
     mappings = {
       i = {
         ['<C-u>'] = false,
-        ['<C-d>'] = false,
+        ['<c-d>'] = 'delete_buffer',
       },
     },
+  },
+  extensions = {
+    live_grep_args = {
+      auto_quoting = true, -- enable/disable auto-quoting
+      -- define mappings, e.g.
+      mappings = {         -- extend mappings
+        i = {
+          ["<C-k>"] = lga_actions.quote_prompt(),
+          ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+        },
+      },
+      -- ... also accepts theme settings, for example:
+      -- theme = "dropdown", -- use dropdown theme
+      -- theme = { }, -- use own theme spec
+      -- layout_config = { mirror=true }, -- mirror preview pane
+    }
   },
 }
 
@@ -376,6 +394,9 @@ vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by 
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
+local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
+vim.keymap.set("n", "<leader>gc", live_grep_args_shortcuts.grep_word_under_cursor)
+
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
@@ -435,10 +456,10 @@ vim.defer_fn(function()
       swap = {
         enable = true,
         swap_next = {
-          ['<leader>a'] = '@parameter.inner',
+          ['<leader>sa'] = '@parameter.inner',
         },
         swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
+          ['<leader>sA'] = '@parameter.inner',
         },
       },
     },
@@ -448,6 +469,7 @@ end, 0)
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
+  vim.lsp.inlay_hint.enable(true)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
@@ -508,6 +530,16 @@ require('which-key').register({
   ['<leader>h'] = { 'Git [H]unk' },
 }, { mode = 'v' })
 
+-- Aerial config
+require("aerial").setup({
+  -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+  on_attach = function(bufnr)
+    -- Jump forwards/backwards with '{' and '}'
+    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+  end,
+})
+
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
 require('mason').setup()
@@ -522,7 +554,7 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  clangd = { },
+  clangd = {},
   -- gopls = {},
   -- pyright = {},
   rust_analyzer = {},
@@ -626,6 +658,8 @@ vim.keymap.set('n', '<leader>gs', '<cmd>G<cr>', { desc = "[G]it [s]tatus" })
 -- Custom jump
 vim.keymap.set('n', '<A-l>', '<C-i>')
 vim.keymap.set('n', '<A-h>', '<C-o>')
+-- Aerial
+vim.keymap.set('n', '<leader>at', '<cmd>AerialToggle!<CR>')
 
 -- Line numbering options
 vim.opt.nu = true
@@ -635,7 +669,7 @@ vim.opt.expandtab = true
 vim.opt.colorcolumn = { 120 }
 
 -- Display tab differently and also trailing spaces
-vim.opt.listchars:append{tab = "!·", trail = "·"}
+vim.opt.listchars:append { tab = "!·", trail = "·" }
 vim.opt.list = true
 
 -- Remove trailing spaces
@@ -646,7 +680,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 
 -- Format on save
 vim.api.nvim_create_autocmd('BufWritePre', {
-  callback = function ()
+  callback = function()
     vim.lsp.buf.format()
   end,
 })
