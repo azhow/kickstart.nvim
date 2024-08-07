@@ -1,0 +1,57 @@
+#!/bin/bash
+
+echo "Making offline neovim package"
+
+NVIM_DIR=~/.config/nvim
+NVIM_PLUGIN_INSTALL_DIR=~/.local/share/nvim/lazy
+
+if [ ! -d "$NVIM_PLUGIN_INSTALL_DIR" ]
+then
+        echo "No local installation package to copy"
+        exit 1
+else
+        echo "Creating tarball with plugin data files"
+        tar -czvf plugins_data.tar.gz $NVIM_PLUGIN_INSTALL_DIR > /dev/null
+        echo "Created tarball"
+fi
+
+echo "Converting lua files to offline version"
+if [ ! -d "$NVIM_DIR" ]
+then
+        echo "No lua files to convert - ${NVIM_DIR} does not exist"
+        exit 1
+else
+        echo "Converting lua files..."
+
+        echo "Converting [init.lua]: start"
+        # Remove lazy setup as it doesn't work on the offline version
+        sed -E "11,20d" init.lua > init_off.lua
+        # First prepend path for the local plugins
+        sed -i "1i local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'" init_off.lua
+        # Change lazypath
+        sed -E -i "s/local lazypath = vim.fn.stdpath 'data' .. '\/lazy\/lazy.nvim'/local lazypath = pluginspath .. 'lazy.nvim'/" init_off.lua
+        sed -E -i "/^.*https/! s/'.+\/(.+)',/{ dir = pluginspath .. '\1' },/" init_off.lua
+        echo "Converting [init.lua]: done"
+
+        # Copy the dependency plugins
+        NVIM_OFFLINE_PLUGINS_DIR=./lua/custom/plugins_off
+        cp -r ./lua/custom/plugins $NVIM_OFFLINE_PLUGINS_DIR
+
+        # Iterate over the files
+        for FILENAME in $NVIM_OFFLINE_PLUGINS_DIR/*.lua
+        do
+                echo "Converting [${FILENAME}]: start"
+                sed -i "1i local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'" "$FILENAME"
+                sed -E -i "/^.*https/! s/'.+\/(.+)',/dir = pluginspath .. '\1',/" "$FILENAME"
+                sed -E -i "/^.*https/! s/\".+\/(.+)\",/{ dir = pluginspath .. '\1' },/" "$FILENAME"
+                echo "Converting [${FILENAME}]: done"
+        done
+
+        # Zip custom plugins (easier deployment)
+        echo "Creating tarball with the custom plugins"
+        tar -czvf custom_plugins.tar.gz $NVIM_OFFLINE_PLUGINS_DIR > /dev/null
+
+        echo "All done!"
+fi
+
+exit 0
