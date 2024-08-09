@@ -12,13 +12,14 @@ else
 fi
 
 # If offline installation option set
-if [ $1 = "-o" ]
+if [[ $1 = "-o" ]]
 then
         PLUGINS_DATA_TAR=./plugins_data.tar.gz
         if [ -f $PLUGINS_DATA_TAR ]
         then
                 echo "Extracting plugins data"
                 EXTRACTION_DIR="$(pwd)/plugins/lazy"
+                mkdir -p $EXTRACTION_DIR
                 tar -xf $PLUGINS_DATA_TAR -C $EXTRACTION_DIR
                 ln -s "$(pwd)/plugins" "$NVIM_DIR"
         else
