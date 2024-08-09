@@ -11,7 +11,11 @@ then
         exit 1
 else
         echo "Creating tarball with plugin data files"
-        tar -czvf plugins_data.tar.gz $NVIM_PLUGIN_INSTALL_DIR > /dev/null
+        pushd .
+        cd "$NVIM_PLUGIN_INSTALL_DIR/.."
+        tar -czf plugins_data.tar.gz --strip-components=1 lazy
+        popd
+        mv "$NVIM_PLUGIN_INSTALL_DIR/../plugins_data.tar.gz" .
         echo "Created tarball"
 fi
 
@@ -34,7 +38,7 @@ else
         echo "Converting [init.lua]: done"
 
         # Copy the dependency plugins
-        NVIM_OFFLINE_PLUGINS_DIR=./lua/custom/plugins_off
+        NVIM_OFFLINE_PLUGINS_DIR=lua/custom/plugins_off
         cp -r ./lua/custom/plugins $NVIM_OFFLINE_PLUGINS_DIR
 
         # Iterate over the files
@@ -49,7 +53,11 @@ else
 
         # Zip custom plugins (easier deployment)
         echo "Creating tarball with the custom plugins"
-        tar -czvf custom_plugins.tar.gz $NVIM_OFFLINE_PLUGINS_DIR > /dev/null
+        pushd .
+        cd "$NVIM_OFFLINE_PLUGINS_DIR/.."
+        tar -czf custom_plugins.tar.gz --strip-components=1 plugins_off
+        popd
+        mv "$NVIM_OFFLINE_PLUGINS_DIR/../custom_plugins.tar.gz" .
 
         echo "All done!"
 fi
