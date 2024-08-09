@@ -28,6 +28,7 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
+  defaults = { lazy = true, },
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -302,6 +303,14 @@ local lga_actions = require("telescope-live-grep-args.actions")
 
 require('telescope').setup {
   defaults = {
+    layout_strategy = 'vertical',
+    layout_config = {
+      height = 0.95,
+      anchor = 'center',
+      prompt_position = 'top',
+      mirror = true,
+      preview_cutoff = 10,
+    },
     mappings = {
       i = {
         ['<C-u>'] = false,
@@ -439,18 +448,22 @@ vim.defer_fn(function()
         goto_next_start = {
           [']m'] = '@function.outer',
           [']]'] = '@class.outer',
+          [']a'] = '@parameter.inner',
         },
         goto_next_end = {
           [']M'] = '@function.outer',
           [']['] = '@class.outer',
+          [']A'] = '@parameter.outer',
         },
         goto_previous_start = {
           ['[m'] = '@function.outer',
           ['[['] = '@class.outer',
+          ['[a'] = '@parameter.inner',
         },
         goto_previous_end = {
           ['[M'] = '@function.outer',
           ['[]'] = '@class.outer',
+          ['[A'] = '@parameter.outer',
         },
       },
       swap = {
@@ -676,6 +689,15 @@ vim.opt.list = true
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*" },
   command = [[%s/\s\+$//e]],
+})
+
+-- Spell check for MD and git commit messages
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'markdown', 'gitcommit' },
+  callback = function()
+    vim.opt_local.spell = true
+    vim.api.nvim_command('highlight SpellBad guibg=DarkRed')
+  end,
 })
 
 -- Format on save

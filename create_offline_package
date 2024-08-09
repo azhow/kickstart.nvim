@@ -29,7 +29,9 @@ else
 
         echo "Converting [init.lua]: start"
         # Remove lazy setup as it doesn't work on the offline version
-        sed -E "11,20d" init.lua > init_off.lua
+        sed -E "582,598d" init.lua > init_off.lua
+        sed -E -i "544,573d" init_off.lua
+        sed -E -i "11,20d" init_off.lua
         # First prepend path for the local plugins
         sed -i "1i local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'" init_off.lua
         # Change lazypath
