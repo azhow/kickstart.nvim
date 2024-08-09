@@ -27,6 +27,7 @@ then
                 exit 1
         fi
 
+        ln -s "$(pwd)/lua" $NVIM_DIR
         PLUGINS_TAR=./custom_plugins.tar.gz
         if [ -f $PLUGINS_TAR ]
         then
