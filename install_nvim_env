@@ -18,7 +18,7 @@ then
         if [ -f $PLUGINS_DATA_TAR ]
         then
                 echo "Extracting plugins data"
-                EXTRACTION_DIR="$(pwd)/plugins/lazy"
+                EXTRACTION_DIR="$(pwd)/plugins"
                 mkdir -p $EXTRACTION_DIR
                 tar -xf $PLUGINS_DATA_TAR -C $EXTRACTION_DIR
                 ln -s "$(pwd)/plugins" "$NVIM_DIR"
