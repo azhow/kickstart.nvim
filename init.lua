@@ -709,3 +709,5 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 -- Fix clipboard issue
 vim.opt.mouse = ""
+
+-- Add new config below!
