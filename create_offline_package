@@ -13,7 +13,7 @@ else
         echo "Creating tarball with plugin data files"
         pushd .
         cd "$NVIM_PLUGIN_INSTALL_DIR/.."
-        tar -czf plugins_data.tar.gz --strip-components=1 lazy
+        tar -czf plugins_data.tar.gz --strip 1 lazy
         popd
         mv "$NVIM_PLUGIN_INSTALL_DIR/../plugins_data.tar.gz" .
         echo "Created tarball"
@@ -41,11 +41,21 @@ else
         echo "Converting [init.lua]: done"
 
         # Copy the dependency plugins
-        NVIM_OFFLINE_PLUGINS_DIR=lua/custom/plugins_off
-        cp -r ./lua/custom/plugins $NVIM_OFFLINE_PLUGINS_DIR
+        NVIM_OFFLINE_PLUGINS_DIR=lua_off
+        cp -r ./lua $NVIM_OFFLINE_PLUGINS_DIR
 
         # Iterate over the files
-        for FILENAME in $NVIM_OFFLINE_PLUGINS_DIR/*.lua
+        for FILENAME in $NVIM_OFFLINE_PLUGINS_DIR/custom/plugins/*.lua
+        do
+                echo "Converting [${FILENAME}]: start"
+                sed -i "1i local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'" "$FILENAME"
+                sed -E -i "/^.*https/! s/'.+\/(.+)',/dir = pluginspath .. '\1',/" "$FILENAME"
+                sed -E -i "/^.*https/! s/\".+\/(.+)\",/{ dir = pluginspath .. '\1' },/" "$FILENAME"
+                echo "Converting [${FILENAME}]: done"
+        done
+
+        # Iterate over the files
+        for FILENAME in $NVIM_OFFLINE_PLUGINS_DIR/kickstart/plugins/*.lua
         do
                 echo "Converting [${FILENAME}]: start"
                 sed -i "1i local pluginspath = vim.fn.stdpath 'config' .. '/plugins/lazy/'" "$FILENAME"
@@ -56,11 +66,7 @@ else
 
         # Zip custom plugins (easier deployment)
         echo "Creating tarball with the custom plugins"
-        pushd .
-        cd "$NVIM_OFFLINE_PLUGINS_DIR/.."
-        tar -czf custom_plugins.tar.gz --strip-components=1 plugins_off
-        popd
-        mv "$NVIM_OFFLINE_PLUGINS_DIR/../custom_plugins.tar.gz" .
+        tar -czf custom_plugins.tar.gz --strip 1 lua_off
 
         echo "All done!"
 fi

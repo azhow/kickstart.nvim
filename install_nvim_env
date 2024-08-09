@@ -27,22 +27,17 @@ then
                 exit 1
         fi
 
-        ln -s "$(pwd)/lua" $NVIM_DIR
         PLUGINS_TAR=./custom_plugins.tar.gz
         if [ -f $PLUGINS_TAR ]
         then
                 echo "Extracting custom plugins"
-                PLUGINS_DIR="$NVIM_DIR/lua/custom/plugins"
-                PLUGIN_EXTRACTION_TARGET_DIR="$(pwd)/lua/custom/plugins_off"
-                mkdir -p $PLUGIN_EXTRACTION_TARGET_DIR
-                tar -xf $PLUGINS_TAR -C $PLUGIN_EXTRACTION_TARGET_DIR
-                mkdir -p $PLUGINS_DIR
-                ln -s $PLUGIN_EXTRACTION_TARGET_DIR $PLUGINS_DIR
+                tar -xf $PLUGINS_TAR
         else
                 echo "Error: missing custom_plugins tarball"
                 exit 2
         fi
 
+        ln -s "$(pwd)/lua_off" $NVIM_DIR/lua
         ln -s "$(pwd)/init_off.lua" $NVIM_DIR/init.lua
 else
         ln -s "$(pwd)/lua" $NVIM_DIR
