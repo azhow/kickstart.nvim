@@ -18,16 +18,27 @@ then
         if [ -f $PLUGINS_DATA_TAR ]
         then
                 echo "Extracting plugins data"
-                tar -xf $PLUGINS_DATA_TAR
+                EXTRACTION_DIR="$(pwd)/plugins/lazy"
+                tar -xf $PLUGINS_DATA_TAR -C $EXTRACTION_DIR
                 ln -s "$(pwd)/plugins" "$NVIM_DIR"
+        else
+                echo "Error: missing plugins_data tarball"
+                exit 1
         fi
 
         PLUGINS_TAR=./custom_plugins.tar.gz
         if [ -f $PLUGINS_TAR ]
         then
                 echo "Extracting custom plugins"
-                tar -xf $PLUGINS_TAR
-                ln -s "$(pwd)/lua/custom/plugins_off" $NVIM_DIR/lua/custom/plugins
+                PLUGINS_DIR="$NVIM_DIR/lua/custom/plugins"
+                PLUGIN_EXTRACTION_TARGET_DIR="$(pwd)/lua/custom/plugins_off"
+                mkdir -p $PLUGIN_EXTRACTION_TARGET_DIR
+                tar -xf $PLUGINS_TAR -C $PLUGIN_EXTRACTION_TARGET_DIR
+                mkdir -p $PLUGINS_DIR
+                ln -s $PLUGIN_EXTRACTION_TARGET_DIR $PLUGINS_DIR
+        else
+                echo "Error: missing custom_plugins tarball"
+                exit 2
         fi
 
         ln -s "$(pwd)/init_off.lua" $NVIM_DIR/init.lua
@@ -37,3 +48,4 @@ else
 fi
 
 echo "All done!"
+exit 0
