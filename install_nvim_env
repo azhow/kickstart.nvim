@@ -8,12 +8,14 @@ if [ ! -d "$NVIM_DIR" ]
 then
         mkdir -p "$NVIM_DIR"
 else
+        echo "Backuping existing config"
         mv $NVIM_DIR ~/.config/nvim_oldfiles
 fi
 
 # If offline installation option set
 if [[ $1 = "-o" ]]
 then
+        echo "Doing offline installation"
         PLUGINS_DATA_TAR=./plugins_data.tar.gz
         if [ -f $PLUGINS_DATA_TAR ]
         then
@@ -40,6 +42,7 @@ then
         ln -s "$(pwd)/lua_off" $NVIM_DIR/lua
         ln -s "$(pwd)/init_off.lua" $NVIM_DIR/init.lua
 else
+        echo "Doing normal installation"
         ln -s "$(pwd)/lua" $NVIM_DIR
         ln -s "$(pwd)/init.lua" $NVIM_DIR/init.lua
 fi

@@ -38,6 +38,7 @@ else
         # Change lazypath
         sed -E -i "s/local lazypath = vim.fn.stdpath 'data' .. '\/lazy\/lazy.nvim'/local lazypath = pluginspath .. 'lazy.nvim'/" init_off.lua
         sed -E -i "/^.*https/! s/'.+\/(.+)',/{ dir = pluginspath .. '\1' },/" init_off.lua
+        sed -E -i "/^.*https/! s/\".+\/(.+)\",/dir = pluginspath .. '\1',/" init_off.lua
         echo "Converting [init.lua]: done"
 
         # Copy the dependency plugins
